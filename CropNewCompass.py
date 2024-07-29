@@ -24,12 +24,10 @@ parser.add_argument(
     "--max-workers", type=int, help="Number of processes to use", default=20
 )
 args = parser.parse_args()
-# original_path = os.path.join(os.getcwd(), args.path)
-
 
 def process_vids(original_path: str, file: str):
     logging.info(original_path)
-    path = os.path.join(original_path, file)
+    path = os.path.join(original_path, "old", file) # original_path, old created earlier
     logging.info(f"Capture to Path {file} about to be established")
 
     cap = cv2.VideoCapture(path)
@@ -57,15 +55,10 @@ def process_vids(original_path: str, file: str):
 
             color = (0, 0, 0)
 
-            start_point_1 = (0, 0)
-            end_point_1 = (width // 6, height)
+            start_point_1 = ((width)//3, height //3 + 30)
+            end_point_1 = (2*width//3, (2 * height) // 3 + 55) 
 
             mask = cv2.rectangle(mask, start_point_1, end_point_1, color, -1)
-
-            start_point_2 = (int(width // 2), 0)
-            end_point_2 = (int(width), int(height))
-            
-            mask = cv2.rectangle(mask, start_point_2, end_point_2, color, -1)
 
             result = cv2.bitwise_and(frame, mask)
             writer.write(result)
@@ -83,12 +76,15 @@ def process_vids(original_path: str, file: str):
 if __name__ == "__main__":
     freeze_support()
     try:
-        command = f"ls {args.path} | grep -E '.mp4$|.h264$'"
-        ansi_escape = re.compile(r"\x1B\[[0-?]*[ -/]*[@-~]")
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
-        file_list = sorted(
-            [ansi_escape.sub("", line) for line in result.stdout.splitlines()]
-        )
+        # subprocess.run("rm -rf old", shell=True)
+        subprocess.run("mkdir old", shell=True)
+        src_path = os.path.join(args.path, "*.mp4")
+        dest_path = os.path.join(args.path, "old")
+        command = f"mv {src_path} {dest_path}"
+        subprocess.run(command, shell=True)
+        file_list = os.listdir(os.path.join(args.path, "old"))
+        # only keep unique mp4 files
+        file_list = list(set([file for file in file_list if re.search(r".mp4$", file)]))
         logging.debug(f"File List: {file_list}")
     except Exception as e:
         logging.error(f"Error in getting file list with error {e}")
