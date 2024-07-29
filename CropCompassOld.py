@@ -18,7 +18,7 @@ parser.add_argument(
     "--path",
     type=str,
     help="Path to the directory containing the video files",
-    default="."
+    required=True,
 )
 parser.add_argument(
     "--max-workers", type=int, help="Number of processes to use", default=20
@@ -80,7 +80,7 @@ if __name__ == "__main__":
     try:
         subprocess.run("rm -rf old", shell=True)
         subprocess.run("mkdir old", shell=True)
-        command = f"mv {args.path}/'*.mp4' {os.path.join(args.path, 'old')}"
+        command = f"mv {os.path.join(args.path, "*.mp4")} {os.path.join(args.path, 'old')}"
         subprocess.run(command, shell=True)
         file_list = os.listdir(os.path.join(args.path, "old"))
         logging.debug(f"File List: {file_list}")
