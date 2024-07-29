@@ -78,11 +78,15 @@ def process_vids(original_path: str, file: str):
 if __name__ == "__main__":
     freeze_support()
     try:
-        subprocess.run("rm -rf old", shell=True)
+        # subprocess.run("rm -rf old", shell=True)
         subprocess.run("mkdir old", shell=True)
-        command = f"mv {os.path.join(args.path, "*.mp4")} {os.path.join(args.path, 'old')}"
+        src_path = os.path.join(args.path, "*.mp4")
+        dest_path = os.path.join(args.path, "old")
+        command = f"mv {src_path} {dest_path}"
         subprocess.run(command, shell=True)
         file_list = os.listdir(os.path.join(args.path, "old"))
+        # only keep unique mp4 files
+        file_list = list(set([file for file in file_list if re.search(r".mp4$", file)]))
         logging.debug(f"File List: {file_list}")
     except Exception as e:
         logging.error(f"Error in getting file list with error {e}")
