@@ -55,7 +55,7 @@ def process_vids(original_path: str, file: str):
             # Flip the mask color to white
             mask.fill(255)
 
-            color = (0, 0, 0)
+            color = (1, 1, 1)
 
             start_point_1 = ((3*width)//4, height // 3)
             end_point_1 = (int(width), (4 * height) // 5) # all of width because of shadow

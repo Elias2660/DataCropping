@@ -53,7 +53,7 @@ def process_vids(original_path: str, file: str):
             # Flip the mask color to white
             mask.fill(255)
 
-            color = (0, 0, 0)
+            color = (1, 1, 1)
 
             start_point_1 = ((width)//3, height //3 + 30)
             end_point_1 = (2*width//3, (2 * height) // 3 + 55) 
